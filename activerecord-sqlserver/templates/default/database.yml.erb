@@ -1,0 +1,15 @@
+common: &common
+  adapter: sqlserver
+  mode: odbc
+  dsn: <%= @dsn %>
+  username: <%= @username %>
+  password: <%= @password %>
+production:
+  database: <%= @db_name %>
+  <<: *common
+development:
+  database: <%= @db_name %>_dev
+  <<: *common
+test:
+  database: <%= @db_name %>_test
+  <<: *common
