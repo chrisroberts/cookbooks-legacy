@@ -1,1 +1,1 @@
-set_unless[:unicorn][:cow_friendly] = "true"
+default[:unicorn][:cow_friendly] = "true"

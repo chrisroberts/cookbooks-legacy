@@ -3,13 +3,12 @@ set -e
 
 # Stolen from: <http://github.com/defunkt/unicorn/blob/master/examples/init.sh>
 
-# Example init script, this can be used with nginx, too,
-# since nginx and unicorn accept the same signals
+export GEM_HOME=<%= @gem_home %>
  
 # Feel free to change any of the following variables for your app:
 APP_ROOT=/var/www/current
 PID=/var/www/shared/pids/unicorn.pid
-CMD="<%= @gem_home %>/unicorn_rails --daemonize --env production --config-file /etc/unicorn/app.rb"
+CMD="<%= @gem_path %>/unicorn_rails --daemonize --env production --config-file /etc/unicorn/app.rb"
 #INIT_CONF=$APP_ROOT/config/init.conf
  
 #test -f "$INIT_CONF" && . $INIT_CONF
