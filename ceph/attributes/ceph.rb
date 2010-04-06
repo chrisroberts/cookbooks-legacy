@@ -1,0 +1,1 @@
+set_unless[:ceph][:node_quanity] = 3
