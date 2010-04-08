@@ -1,17 +1,6 @@
-# this code sucks
-
-  if File.exists? "/usr/local/bin/ruby"
-    gem_home = "/usr/local/lib/ruby/gems/1.8"
-    gem_path = "/usr/local/bin"
-  elsif File.exists? "/home/rvm/.rvm/bin/rvm"
-    gem_home = `sudo -H -u rvm /home/rvm/.rvm/bin/rvm gemdir`.strip
-    gem_path = gem_home + "/bin"
-  else
-    gem_home = "/var/lib/gems/1.8"
-    gem_path = gem_home + "/bin"
-  end
-
-# end suck
+class Chef::Resource::Template
+  include GemPath
+end
 
 template "/etc/init.d/unicorn" do
   source "unicorn-init.sh.erb"
@@ -19,8 +8,8 @@ template "/etc/init.d/unicorn" do
   group "root"
   mode "755"
   variables( 
-    :gem_path => gem_path,
-    :gem_home => gem_home )
+    :gem_bin => gem_bin_path,
+    :gem_home => gem_home_path )
 end
 
 gem_package "unicorn" do
