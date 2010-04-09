@@ -20,7 +20,7 @@ end
 execute "configure FreeTDS" do
   command "./configure --prefix=/usr --sysconfdir=/etc --with-tdsver=#{node[:freetds][:tds_version]}"
   cwd "/usr/src/freetds-#{version}"
-  creates "/usr/src/freetds-#{version}/config.log"
+  creates "/usr/src/freetds-#{version}/Makefile"
 end
 
 execute "build FreeTDS" do

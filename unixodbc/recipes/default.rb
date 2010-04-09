@@ -16,7 +16,7 @@ end
 execute "configure unixODBC" do
   command "./configure --prefix=/usr --sysconfdir=/etc --enable-gui=no"
   cwd "/usr/src/unixODBC-#{version}"
-  creates "/usr/src/unixODBC-#{version}/config.log"
+  creates "/usr/src/unixODBC-#{version}/Makefile"
 end
 
 execute "build unixODBC" do
