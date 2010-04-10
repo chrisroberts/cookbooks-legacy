@@ -32,9 +32,5 @@ execute "install ruby-odbc" do
   cwd "/usr/src/ruby-odbc-#{version}"
   user "root"
   group "root"
-  if node[:kernel][:machine] == "x86_64"
-    creates "/usr/local/lib/site_ruby/1.8/x86_64-linux/odbc.so"
-  else
-    creates "/usr/local/lib/site_ruby/1.8/i686-linux/odbc.so"
-  end
+  not_if "ruby -e \"require 'odbc'\""
 end
