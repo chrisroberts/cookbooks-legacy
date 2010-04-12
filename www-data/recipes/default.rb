@@ -22,10 +22,3 @@ file "/var/www/.ssh/authorized_keys" do
   group "www-data"
   mode "644"
 end
-
-remote_file "/var/www/.ssh/known_hosts" do
-  source "github-known_hosts"
-  owner "www-data"
-  group "www-data"
-  mode "644"
-end
