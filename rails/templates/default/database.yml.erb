@@ -1,0 +1,15 @@
+common: &common
+  adapter: postgresql
+  username: <%= @username %>
+  password: <%= @password %>
+  encoding: UTF8
+production:
+  database: <%= @db_name %>
+  <<: *common
+development:
+  database: <%= @db_name %>_dev
+  <<: *common
+test:
+  database: <%= @db_name %>_test
+  <<: *common
+  
