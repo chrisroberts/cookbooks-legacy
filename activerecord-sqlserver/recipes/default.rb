@@ -3,7 +3,14 @@ include_recipe "ruby-odbc"
 
 gem_package "activerecord-sqlserver-adapter"
 
-template "/var/www/shared/database.yml" do
+directory "/var/www/shared/config" do
+  owner "www-data"
+  group "www-data"
+  mode "755"  
+  action :create
+end
+
+template "/var/www/shared/config/database.yml" do
   source "database.yml.erb"
   owner "www-data"
   group "www-data"
