@@ -19,7 +19,7 @@ remote_file "/usr/src/xtreemfs-client_#{version}_i386.deb" do
   mode "644"
   owner "root"
   group "root"
-  only_if do node[:kernel][:machine] == "i386" end
+  only_if do node[:kernel][:machine] == "i686" end
 end
 
 remote_file "/usr/src/xtreemfs-tools_#{version}_all.deb" do
@@ -41,5 +41,5 @@ end
 
 dpkg_package "xtreemfs-client_#{version}_i386.deb" do
   source "/usr/src/xtreemfs-client_#{version}_i386.deb"
-  only_if do node[:kernel][:machine] == "i386" end
+  only_if do node[:kernel][:machine] == "i686" end
 end
