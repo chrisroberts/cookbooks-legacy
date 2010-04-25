@@ -5,7 +5,8 @@ mkfs.xtreemfs metadata.heavywater.ca/volume_name
 mkdir /mnt/xtreemfs
 
 -- mount volume
-sudo mount.xtreemfs -o=allow_other metadata.heavywater.ca/volume_name xtreemfs
+sudo mount.xtreemfs -o=allow_other metadata.heavywater.ca/volume_name /mnt/xtreemfs
 
 -- unmount volume
 fusermount -u /mnt/xtreemfs
+
