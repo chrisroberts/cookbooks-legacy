@@ -1,5 +1,7 @@
 include_recipe "xtreemfs::backend"
+
 package "attr"
+package "libfuse2"
 
 uri = node[:xtreemfs][:repository_uri]
 version = node[:xtreemfs][:version]
@@ -43,3 +45,16 @@ dpkg_package "xtreemfs-client_#{version}_i386.deb" do
   source "/usr/src/xtreemfs-client_#{version}_i386.deb"
   only_if do node[:kernel][:machine] == "i686" end
 end
+
+execute "load fuse kernel module" do
+  command "modprobe fuse"
+  user "root"
+  not_if "lsmod | grep fuse"
+end
+
+execute "include fuse kernel module at boot" do
+  command "echo fuse >> /etc/modules"
+  user "root"
+  not_if "grep fuse /etc/modules"
+end
+
