@@ -2,7 +2,7 @@ package "postfix" do
   action :upgrade
 end
 
-package "mailx" do
+package "bsd-mailx" do
   action :upgrade
 end
 
