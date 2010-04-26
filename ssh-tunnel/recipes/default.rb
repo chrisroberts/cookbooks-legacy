@@ -1,6 +1,7 @@
-%w( ssh autossh postfix mailx ).each do |p|
-  package p
-end
+include_recipe "postfix"
+
+package "ssh"
+package "autossh"
 
 user "tunnel" do
   home "/home/tunnel"
@@ -45,5 +46,7 @@ template "/etc/rc.local" do
   owner "root"
   group "root"
   mode "755"
-  variables( :proxy => node[:tunnel][:proxy] )
+  variables( 
+    :proxy => node[:tunnel][:proxy],
+    :port => node[:tunnel][:port] )
 end
