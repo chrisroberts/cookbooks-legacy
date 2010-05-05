@@ -1,7 +1,16 @@
 service "chef-client" do
   supports :restart => true, :reload => true, :status => true
-  action :disable
+  action [ :stop, :disable ]
   only_if "test -f /etc/init.d/chef-client"
+end
+
+file "/etc/init.d/chef-client" do
+  action :delete
+end
+
+file "/etc/logrotate.d/chef" do
+  backup false
+  action :delete
 end
 
 remote_file "/etc/chef/packages@opscode.com.gpg.key" do
@@ -22,16 +31,3 @@ execute "update repository" do
   command "apt-get update"
   not_if "test -f /var/lib/apt/lists/apt.opscode.com_dists_karmic_Release"
 end
-
-=begin
-
-# this is a half-baked idea.
-# apparently chef doesn't like being upgraded while running.
-# suppose that part needs to be hand cranked for now.
-
-execute "upgrade chef" do
-  command "apt-get upgrade ohai chef -y"
-  not_if "chef-solo --version | grep #{node[:chef][:version]}"
-end
-
-=end

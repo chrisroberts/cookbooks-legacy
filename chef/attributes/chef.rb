@@ -1,1 +1,0 @@
-set_unless[:chef][:version] = "0.7.16"
