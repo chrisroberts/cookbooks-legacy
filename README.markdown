@@ -2,7 +2,7 @@
 
 **WARNING: These cookbooks destroy computers. Be sure to understand every line before running. Unexpected things will happen anyway.**
 
-## Install Chef and build tools on Ubuntu 9.10 (Karmic)
+## Install Chef and build tools on Ubuntu 10.04 (Lucid)
 
     sudo apt-get install chef ohai ruby-full rubygems build-essential
 
