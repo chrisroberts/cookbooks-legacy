@@ -14,7 +14,7 @@ execute "create #{username} database user" do
 end
 
 execute "create #{db_name} database" do
-  command "createdb --owner=#{username} #{db_name}"
+  command "createdb --encoding=UTF8 --owner=#{username} #{db_name}"
   user "postgres"
   not_if do 
     `sudo -u postgres psql --tuples-only --command=" \
