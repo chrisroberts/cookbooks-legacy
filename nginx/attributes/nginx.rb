@@ -1,3 +1,4 @@
+default[:nginx][:hostname] = `hostname -f`.strip
 set_unless[:nginx][:path] = "/usr/sbin"
 set_unless[:nginx][:version] = "0.7.65"
 set_unless[:nginx][:ssl] = "false"
