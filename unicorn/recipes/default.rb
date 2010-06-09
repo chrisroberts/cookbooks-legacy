@@ -7,7 +7,8 @@ template "/etc/init.d/unicorn" do
   owner "root"
   group "root"
   mode "755"
-  variables( 
+  variables(
+    :environment => node.unicorn.environment,
     :gem_bin => gem_bin_path,
     :gem_home => gem_home_path )
 end
