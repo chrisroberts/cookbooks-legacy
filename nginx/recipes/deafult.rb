@@ -1,11 +1,8 @@
-package "nginx" do
-  options "--option Dpkg::Options::=\"--force-confnew\""
-  action :upgrade
-end
+package "nginx"
 
 service "nginx" do
   supports :status => true, :restart => true, :reload => true
-  action :enable
+  action [ :enable, :start ]
 end
 
 directory "/var/www/nginx-default" do
@@ -21,17 +18,7 @@ link "/etc/nginx/sites-enabled/app" do
   to "/etc/nginx/sites-available/app"
 end
 
-link "/etc/nginx/ssl.cert" do
-  to "/etc/nginx/cert.pem"
-  only_if "test -f /etc/nginx/cert.pem"
-end
-
-link "/etc/nginx/ssl.key" do
-  to "/etc/nginx/cert.key"
-  only_if "test -f /etc/nginx/cert.key"
-end
-
-remote_file "/etc/nginx/ssl.cert" do
+cookbook_file "/etc/nginx/ssl.cert" do
   source "bogus.cert"
   owner "root"
   group "root"
@@ -39,7 +26,7 @@ remote_file "/etc/nginx/ssl.cert" do
   not_if "test -f /etc/nginx/ssl.cert"
 end
 
-remote_file "/etc/nginx/ssl.key" do
+cookbook_file "/etc/nginx/ssl.key" do
   source "bogus.key"
   owner "root"
   group "root"

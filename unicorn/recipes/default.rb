@@ -1,20 +1,13 @@
-class Chef::Resource::Template
-  include GemPath
-end
-
 template "/etc/init.d/unicorn" do
   source "unicorn-init.sh.erb"
   owner "root"
   group "root"
   mode "755"
-  variables(
-    :environment => node.unicorn.environment,
-    :gem_bin => gem_bin_path,
-    :gem_home => gem_home_path )
+  variables :environment => node.unicorn.environment
 end
 
-gem_package "unicorn" do
-  action :upgrade
+ree_gem "unicorn" do
+  action :install
 end
 
 service "unicorn" do
