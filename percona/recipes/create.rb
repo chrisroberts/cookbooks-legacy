@@ -18,5 +18,6 @@ end
 execute "create #{db} database" do
   command "mysql --execute=\"create database #{db} character set utf8\""
   not_if "mysql --silent --skip-column-names \
-      --execute=\"show databases like '#{db}'\" | grep #{db}" 
+      --execute=\"show databases like '#{db}'\" | grep #{db}"
+  user "root"
 end
