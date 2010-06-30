@@ -14,8 +14,6 @@ template "/etc/init.d/unicorn" do
 end
 
 gem_package "unicorn" do
-  path = node[:rvm][:gem_binary]
-  gem_binary path if path
   action :upgrade
 end
 
@@ -37,5 +35,5 @@ template "/etc/unicorn/app.rb" do
   group "root"
   mode "644"
   variables( :cow_friendly => node[:unicorn][:cow_friendly])
-  #notifies :restart, resources(:service => "unicorn")
+  # notifies :restart, resources(:service => "unicorn")
 end

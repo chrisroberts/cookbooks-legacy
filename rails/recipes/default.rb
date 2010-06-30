@@ -1,8 +1,5 @@
-
 gem_package "rack" do
   version "1.0.1"
-  path = node[:rvm][:gem_binary]
-  gem_binary path if path
   action :install
 end
 
@@ -12,8 +9,6 @@ execute "remove newer rack versions" do
 end
 
 gem_package "rails" do
-  path = node[:rvm][:gem_binary]
-  gem_binary path if path
   version "2.3.5"
   action :install
 end
