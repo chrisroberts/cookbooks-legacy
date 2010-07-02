@@ -20,13 +20,13 @@ template "/home/tunnel/.ssh/config" do
   owner "tunnel"
   group "tunnel"
   mode "644"
-  variables( 
-    :alive_interval => node[:tunnel][:alive_interval],
-    :alive_count => node[:tunnel][:alive_count] )
+  variables(
+            :alive_interval => node.tunnel.alive_interval,
+            :alive_count => node.tunnel.alive_count )
 end
 
 execute "ssh-keygen" do
-  command "ssh-keygen -q -t rsa -f .ssh/id_rsa -N \"\""
+  command "ssh-keygen -q -t rsa -f .ssh/id_rsa -N ''"
   cwd "/home/tunnel"
   user "tunnel"
   group "tunnel"
@@ -46,7 +46,9 @@ template "/etc/rc.local" do
   owner "root"
   group "root"
   mode "755"
-  variables( 
-    :proxy => node[:tunnel][:proxy],
-    :port => node[:tunnel][:port] )
+  variables(
+            :host => node.tunnel.host,
+            :local_port => node.tunnel.local_port,
+            :remote_port => node.tunnel.remote_port,
+            :direction => node.tunnel.direction )
 end

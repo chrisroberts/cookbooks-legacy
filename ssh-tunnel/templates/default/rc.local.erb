@@ -11,5 +11,5 @@
 #
 # By default this script does nothing.
 
-su tunnel -c '/usr/bin/autossh -M 0 -NR <%= @port %>:localhost:22 <%= @proxy %>' &
+su tunnel -c '/usr/bin/autossh -M 0 -N<%= @direction %> <%= @local_port %>:localhost:<%= @remote_port %> <%= @host %>' &
 exit 0
