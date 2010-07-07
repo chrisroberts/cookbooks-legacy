@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# A script that backs up a Postgres cluster to Amazon S3.
+# Copyright (C) 2007 Darrin Eden
+# GNU v2
+
+# Example: sudo crontab -u postgres -e
+# 00 01 * * * /usr/local/sbin/s3_postgres_backup.sh
+
+# Change this stuff
+export AWS_ACCESS_KEY_ID=<%= @key_id %>
+export AWS_SECRET_ACCESS_KEY=<%= @secret %>
+BUCKET=<%= @bucket %>
+# You're done changing stuff
+
+HOSTNAME=`hostname -s`
+DATE=`date "+%Y%m%d%H"`
+DUMP=<%= @dump_directory %>
+
+if [ ! -d $DUMP ] 
+        then 
+        mkdir $DUMP 
+fi
+
+find $DUMP -type f -mtime +8 | xargs rm -f
+
+pg_dumpall | bzip2 -c > $DUMP'/'$DATE'_'$HOSTNAME'.sql.bz2'
+
+ruby -I /usr/src/s3sync /usr/src/s3sync/s3sync.rb -s -r --delete $DUMP \
+$BUCKET:$HOSTNAME

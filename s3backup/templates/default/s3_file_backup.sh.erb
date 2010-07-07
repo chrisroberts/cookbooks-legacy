@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# A script that backs up a partial file system to Amazon S3.
+# Copyright (C) 2007 Darrin Eden
+# GNU v2
+
+# Example: sudo crontab  -e
+# 00 01 * * * /usr/local/sbin/s3_file_backup.sh
+
+# Change this stuff
+export AWS_ACCESS_KEY_ID=<%= @access_id %>
+export AWS_SECRET_ACCESS_KEY=<%= secret_key %>
+BUCKET=prooftrak-shared-backup
+SOURCE_DIRS="/var/www/shared/var /var/www/shared/public"
+# You're done changing stuff
+
+export S3SYNC_RETRIES=1000
+export S3SYNC_WAITONERROR=3
+
+HOSTNAME=`hostname -s`
+RUBY_CMD="/usr/local/bin/ruby -I /usr/local/sbin/s3sync"
+SYNC_CMD="/usr/local/sbin/s3sync/s3sync.rb --delete -r -s"
+
+for dir in $SOURCE_DIRS; do
+  nice -n 19 $RUBY_CMD $SYNC_CMD $dir $BUCKET:$HOSTNAME`dirname $dir`
+done
