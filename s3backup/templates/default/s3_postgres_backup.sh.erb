@@ -4,9 +4,6 @@
 # Copyright (C) 2007 Darrin Eden
 # GNU v2
 
-# Example: sudo crontab -u postgres -e
-# 00 01 * * * /usr/local/sbin/s3_postgres_backup.sh
-
 # Change this stuff
 export AWS_ACCESS_KEY_ID=<%= @key_id %>
 export AWS_SECRET_ACCESS_KEY=<%= @secret %>
@@ -22,7 +19,7 @@ if [ ! -d $DUMP ]
         mkdir $DUMP 
 fi
 
-find $DUMP -type f -mtime +8 | xargs rm -f
+find $DUMP -type f -mtime +<%= @keep_days %> | xargs rm -f
 
 pg_dumpall | bzip2 -c > $DUMP'/'$DATE'_'$HOSTNAME'.sql.bz2'
 
