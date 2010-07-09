@@ -18,7 +18,7 @@ link "/etc/nginx/sites-enabled/app" do
   to "/etc/nginx/sites-available/app"
 end
 
-cookbook_file "/etc/nginx/ssl.cert" do
+remote_file "/etc/nginx/ssl.cert" do
   source "bogus.cert"
   owner "root"
   group "root"
@@ -26,7 +26,7 @@ cookbook_file "/etc/nginx/ssl.cert" do
   not_if "test -f /etc/nginx/ssl.cert"
 end
 
-cookbook_file "/etc/nginx/ssl.key" do
+remote_file "/etc/nginx/ssl.key" do
   source "bogus.key"
   owner "root"
   group "root"
