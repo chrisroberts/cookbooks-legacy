@@ -4,6 +4,4 @@
   end
 end
 
-gem_package "nokogiri" do
-  action :upgrade
-end
+ree_gem "nokogiri"
