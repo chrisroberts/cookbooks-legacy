@@ -6,6 +6,9 @@ common: &common
 production:
   database: <%= @db_name %>
   <<: *common
+staging:
+  database: <%= @db_name %>
+  <<: *common
 development:
   database: <%= @db_name %>_dev
   <<: *common
