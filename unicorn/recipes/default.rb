@@ -27,6 +27,7 @@ template "/etc/unicorn/app.rb" do
   owner "root"
   group "root"
   mode "644"
-  variables( :cow_friendly => node[:unicorn][:cow_friendly])
-  # notifies :restart, resources(:service => "unicorn")
+  variables( :cow_friendly => node.unicorn.cow_friendly,
+             :worker_processes => node.unicorn.worker_processes )
+  notifies :restart, resources(:service => "unicorn")
 end

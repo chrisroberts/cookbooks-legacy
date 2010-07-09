@@ -1,4 +1,4 @@
-worker_processes 4
+worker_processes <%= @worker_processes %>
 working_directory "/var/www/current"
 listen "/tmp/.unicorn-socket", :backlog => 64
 timeout 30
