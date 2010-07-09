@@ -1,8 +1,4 @@
-include_recipe "postgresql::client"
-
-package "postgresql" do
-  action :upgrade
-end
+package "postgresql"
 
 service "postgresql-8.4" do
   supports :restart => true, :status => true, :reload => true

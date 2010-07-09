@@ -1,3 +1,1 @@
-package "postgresql" do
-  action :upgrade
-end
+package "libpq-dev"
