@@ -2,7 +2,7 @@ package "beanstalkd" do
   action :upgrade
 end
 
-gem_package "beanstalk-client"
+ree_gem "beanstalk-client"
 
 template "/etc/default/beanstalkd"
 
