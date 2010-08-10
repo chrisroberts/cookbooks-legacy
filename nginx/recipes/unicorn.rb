@@ -11,6 +11,8 @@ template "/etc/nginx/sites-available/app" do
   owner "root"
   group "root"
   mode "644"
-  variables :hostname => node.nginx.hostname
+  variables(
+            :hostname => node.nginx.hostname,
+            :client_max_body_size => node.nginx.client_max_body_size )
   notifies :restart, resources( :service => "nginx" )
 end
