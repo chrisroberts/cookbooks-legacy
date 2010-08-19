@@ -7,12 +7,7 @@ service "memcached" do
   action :enable
 end
 
-remote_file "/etc/default/memcached" do
-  source "memcached"
-  owner "root"
-  group "root"
-  mode "644"
-end
+cookbook_file "/etc/default/memcached"
 
 template "/etc/memcached.conf" do
   source "memcached.conf.erb"
