@@ -1,7 +1,7 @@
 include_recipe "www-data"
 include_recipe "ruby-odbc"
 
-gem_package "activerecord-sqlserver-adapter"
+ree_gem "activerecord-sqlserver-adapter"
 
 directory "/var/www/shared/config" do
   owner "www-data"
