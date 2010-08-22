@@ -1,4 +1,5 @@
-include_recipe "postgresql::ruby-pg"
+include_recipe "postgresql::client"
+ree_gem "pg"
 
 template "/var/www/shared/database.yml" do
   source "database.yml.erb"
