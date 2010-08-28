@@ -21,6 +21,6 @@ end
 
 execute "change shell" do
   command "chsh --shell /bin/zsh #{node.zsh.user}"
-  not_if "grep #{node.zsh.user}.*zsh.* /etc/passwd"
+  not_if "grep #{node.zsh.user}.*zsh /etc/passwd"
 end
 
