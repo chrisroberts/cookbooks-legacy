@@ -1,0 +1,1 @@
+default.rvm.user = "dje"
