@@ -5,6 +5,8 @@ description       "Add developers"
 
 supports 'ubuntu'
 
+depends 'sudoers'
+
 attribute "developers/usernames",
   :display_name => "Developer usernames",
   :description => "A list of developer usernames to create",
@@ -17,4 +19,4 @@ attribute "developers/keys_uri",
   :description => "The URI where public ssh keys are downloadable",
   :type => "string",
   :required => true,
-  :default => "http://hw-public.s3.amazonaws.com/keys/"  
+  :default => "http://hw-public.s3.amazonaws.com/keys/"
