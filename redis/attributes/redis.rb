@@ -1,2 +1,2 @@
-set_unless[:redis][:version] = "1.2.2"
-set_unless[:redis][:checksum] = "c7a22e92"
+default.redis.version = "2.0.0"
+default.redis.checksum = "b553850a"

@@ -1,4 +1,4 @@
-version = node[:redis][:version]
+version = node.redis.version
 
 user "redis" do
   action :create
@@ -18,14 +18,12 @@ end
 
 remote_file "/usr/src/redis-#{version}.tar.gz" do
   source "http://redis.googlecode.com/files/redis-#{version}.tar.gz"
-  checksum node[:redis][:checksum]
+  checksum node.redis.checksum
 end
 
 execute "untar redis" do
   command "tar xzf redis-#{version}.tar.gz"
   cwd "/usr/src"
-  user "root"
-  group "root"
   creates "/usr/src/redis-#{version}/README"
 end
 
@@ -65,6 +63,13 @@ directory "/etc/redis" do
 end
 
 directory "/var/lib/redis" do
+  owner "redis"
+  group "redis"
+  mode "755"
+  action :create
+end
+
+directory "/var/log/redis" do
   owner "redis"
   group "redis"
   mode "755"
