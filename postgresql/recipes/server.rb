@@ -10,5 +10,5 @@ template "/etc/postgresql/8.4/main/pg_hba.conf" do
   owner "postgres"
   group "postgres"
   mode "640"
-  notifies :reload, resources(:service => "postgresql-8.4")
+  notifies :restart, resources(:service => "postgresql-8.4")
 end
