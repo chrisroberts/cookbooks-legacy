@@ -6,25 +6,30 @@ execute "create #{username} database user" do
   command "createuser --createdb --no-createrole --no-superuser #{username} && \
     psql --command \"alter role #{username} with encrypted password '#{password}'\""
   user "postgres"
-  not_if do 
+  not_if do
     `sudo -u postgres psql --tuples-only --command=" \
       select rolname from pg_roles where \
       rolname = '#{username}'"`.strip == "#{username}"
-  end 
+  end
 end
 
 execute "create #{db_name} database" do
   command "createdb --encoding=UTF8 --owner=#{username} #{db_name}"
   user "postgres"
-  not_if do 
+  not_if do
     `sudo -u postgres psql --tuples-only --command=" \
       select datname from pg_database where \
       datname = '#{db_name}'"`.strip == "#{db_name}"
-  end  
+  end
+end
+
+execute "alter schema public owner to #{username}" do
+  command "psql --dbname=#{db_name} --command='alter schema public owner to #{username}'"
+  user "postgres"
+  not_if "sudo -u postgres psql --dbname=#{db_name} --command='\\dn' | grep #{username}"
 end
 
 # mixing of concerns to support a downstream process.
-# not happy, but don't have a better idea... yet.
 include_recipe "www-data"
 template "/var/www/.pgpass" do
   source "pgpass.erb"
