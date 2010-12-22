@@ -1,73 +1,120 @@
 #!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          unicorn
+# Short-Description: starts the unicorn web server
+# Description:       starts unicorn web server using start-stop-daemon
+### END INIT INFO
+
+# Return values
+SUCCESS=0
+FAILED=1
+
+# Get everything we want set
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/local/bin/unicorn_rails
+
+NAME=unicorn
+DESC=unicorn
+UID=www-data
+GID=www-data
+
+PID="/var/www/shared/pids/${NAME}.pid"
+OLDPID="$PID.oldbin"
+TIMEOUT=${TIMEOUT-60}
+
+DAEMON_OPTS="--daemonize --config-file /etc/unicorn/app.rb --env <%= @environment %>"
+
+# Signal a PID
+# $1: signal
+# $2: path to pid file
+sig () {
+        if [ -s $2 ]; then
+                kill -s $1 `cat $2`;
+                echo 0;
+        else
+                echo 1;
+        fi
+}
+
+# Make sure we have something to run!
+test -x $DAEMON || exit $FAILED
+
 set -e
 
-# Stolen from: <http://github.com/defunkt/unicorn/blob/master/examples/init.sh>
+. /lib/lsb/init-functions
 
-TIMEOUT=${TIMEOUT-60}
-APP_ROOT=/var/www/current
-PID=/var/www/shared/pids/unicorn.pid
-CMD="/usr/local/bin/unicorn_rails --daemonize --env <%= @environment %> --config-file /etc/unicorn/app.rb"
-INIT_CONF=$APP_ROOT/config/init.conf
-action="$1"
-set -u
-
-test -f "$INIT_CONF" && . $INIT_CONF
-
-old_pid="$PID.oldbin"
-
-cd $APP_ROOT || exit 1
-
-sig () {
-    test -s "$PID" && kill -$1 `cat $PID`
-}
-
-oldsig () {
-    test -s $old_pid && kill -$1 `cat $old_pid`
-}
-
-case $action in
-    start)
-        sig 0 && echo >&2 "Already running" && exit 0
-        $CMD
+case "$1" in
+  start)
+        echo -n "Starting $DESC: "
+        start-stop-daemon --start --quiet --pidfile $PID \
+                --group $GID --chuid $UID --exec $DAEMON -- $DAEMON_OPTS
+        echo "$NAME."
         ;;
-    stop)
-        sig QUIT && exit 0
-        echo >&2 "Not running"
-        ;;
-    force-stop)
-        sig TERM && exit 0
-        echo >&2 "Not running"
-        ;;
-    restart|reload)
-        sig HUP && echo reloaded OK && exit 0
-        echo >&2 "Couldn't reload, starting '$CMD' instead"
-        $CMD
-        ;;
-    upgrade)
-        if sig USR2 && sleep 2 && sig 0 && oldsig QUIT
-        then
-            n=$TIMEOUT
-            while test -s $old_pid && test $n -ge 0
-            do
-                printf '.' && sleep 1 && n=$(( $n - 1 ))
-            done
-            echo
-
-            if test $n -lt 0 && test -s $old_pid
-            then
-                echo >&2 "$old_pid still exists after $TIMEOUT seconds"
-                exit 1
-            fi
-            exit 0
+  stop)
+        echo -n "Stopping $DESC: "
+        if [ $(sig QUIT $PID) ]; then
+                echo "$NAME."
+        else
+                echo "Failed."
+                exit $FAILED
         fi
-        echo >&2 "Couldn't upgrade, starting '$CMD' instead"
-        $CMD
         ;;
-    reopen-logs)
-        sig USR1
+  restart|force-reload)
+        echo -n "Restarting $DESC: "
+        if [ $(sig HUP $PID) ]; then
+                echo "$NAME."
+        else
+                echo "Failed." && exit $FAILED
+        fi
         ;;
-    *)
-        echo >&2 "Usage: $0 <start|stop|restart|upgrade|force-stop|reopen-logs>"
+  reopen-logs)
+        echo -n "Reopening log files: "
+        if [ $(sig USR1 $PID) ]; then
+                echo " OK."
+        else
+                echo "Failed." && exit $FAILED
+        fi
+        ;;
+  upgrade)
+        echo -n "Upgrading $NAME environment."
+        if [ $(sig USR2 $PID) ]; then
+                sleep 2
+                if [ $(sig 0 $PID) -a $(sig QUIT $OLDPID) ]; then
+                        n=$TIMEOUT
+                        while [ -s $OLDPID -a $n -ge 0 ]
+                        do
+                                echo -n "."
+                                sleep 1
+                                n=$(( n - 1 ))
+                        done
+                        if [ -s $OLDPID -a $n -lt 0 ]; then
+                                echo ""
+                                echo "Failed to upgrade $NAME. $OLDPID still exists after $TIMEOUT seconds."
+                                exit $FAILED
+                        fi
+                else
+                        echo ""
+                        echo "Bad response received from $NAME."
+                        exit $FAILED
+                fi
+                echo " OK."
+        else
+                echo ""
+                echo "Failed to locate running instance of unicorn. Starting instead."
+                echo -n "Starting $DESC: "
+                start-stop-daemon --start --quiet --pidfile $PID \
+                        --chuid $UID --group $GID --exec $DAEMON -- $DAEMON_OPTS
+                echo "$NAME."
+        fi
+        ;;
+  status)
+        status_of_proc -p $PID "$DAEMON" "$NAME" && exit 0 || exit $?
+        ;;
+  *)
+        echo "Usage: $NAME {start|stop|restart|force-reload|upgrade|reopen-logs|status}" >&2
         exit 1
         ;;
 esac
+
+exit $SUCCESS
