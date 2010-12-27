@@ -12,18 +12,26 @@ FAILED=1
 
 # Get everything we want set
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/usr/local/bin/unicorn_rails
+DAEMON=unicorn_rails
 
 NAME=unicorn
 DESC=unicorn
 UID=www-data
 GID=www-data
 
+APP_DIR="/var/www/current"
+SHARED_DIR="/var/www/shared"
+BUNDLE_DIR="$SHARED_DIR/bundle"
+
 PID="/var/www/shared/pids/${NAME}.pid"
 OLDPID="$PID.oldbin"
 TIMEOUT=${TIMEOUT-60}
 
 DAEMON_OPTS="--daemonize --config-file /etc/unicorn/app.rb --env <%= @environment %>"
+
+if [ -e "$APP_DIR/Gemfile" ]; then
+        export PATH="$BUNDLE_DIR/bin:$PATH"
+fi
 
 # Signal a PID
 # $1: signal
@@ -37,6 +45,7 @@ sig () {
         fi
 }
 
+DAEMON=`which $DAEMON`
 # Make sure we have something to run!
 test -x $DAEMON || exit $FAILED
 
